@@ -1,10 +1,24 @@
 const connection = require('./connections');
 
-// Use the connection object to execute queries
-connection.query('SELECT * FROM employees', (err, results) => {
-  if (err) throw err;
-  console.log(results);
-});
+class DB {
+  constructor(connection){
+    this.connection = connection
+  }
+  viewRoles() {
+    this.connection.query('SELECT * FROM roles', (err, results) => {
+    if (err) throw err;
+    console.table(results);
+  
+    });
+  }
 
-// Close the connection when done
-connection.end();
+  viewDepartments() {
+    this.connection.query('SELECT * FROM departments', (err, results) => {
+    if (err) throw err;
+    console.table(results);
+  
+    });
+  }
+}
+
+module.exports= new DB(connection)
