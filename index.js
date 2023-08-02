@@ -1,9 +1,8 @@
-
 const inquirer = require('inquirer');
-const db = require("./db");
+const db = require('./db');
 
+startApp();
 
-// Prompt the user with the main menu options
 function startApp() {
   inquirer
     .prompt({
@@ -24,28 +23,20 @@ function startApp() {
     .then((answer) => {
       switch (answer.action) {
         case 'View all departments':
-          viewDepartments();
+          db.viewDepartments();
           break;
         case 'View all roles':
-          viewRoles();
+          db.viewRoles();
           break;
         case 'View all employees':
-          viewEmployees();
+          db.viewEmployees();
           break;
         case 'Add a department':
           addDepartment();
           break;
-        case 'Add a role':
-          addRole();
-          break;
-        case 'Add an employee':
-          addEmployee();
-          break;
-        case 'Update an employee role':
-          updateEmployeeRole();
-          break;
+        // Add cases for other options here
         case 'Exit':
-          connection.end();
+          db.connection.end();
           break;
         default:
           console.log('Invalid option');
@@ -54,25 +45,39 @@ function startApp() {
       }
     });
 }
-startApp();
-// View all departments
-//function viewDepartments() {
-//   connection.query('SELECT * FROM department', (err, res) => {
-//     if (err) throw err;
-//     console.table(res);
-//     startApp();
-//   });
-// }
 
-// View all roles
-function viewRoles() {
-  db.viewRoles()
+function addDepartment() {
+  inquirer
+    .prompt({
+      name: 'department_name',
+      type: 'input',
+      message: 'Enter the name of the department:',
+    })
+    .then((answer) => {
+      db.addDepartment(answer.department_name, () => {
+        console.log('Department added successfully!');
+        startApp();
+      });
+    });
 }
 
-// View all employees
-// function viewEmployees() {
-  // connection.query()
-  //   'SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name AS department, role.salary, CONCAT(manager.first_name, " ", manager.last_name) AS manager FROM employee LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON role.department_id = department.id LEFT JOIN employee manager ON employee.manager_id = manager.id',
-  //   (err)
-  // }
+// Similar functions for addRole, addEmployee, and updateEmployeeRole
 
+// ...
+
+
+
+function addRole() {
+  // Similar to addDepartment, prompt user for role details and insert into the roles table
+}
+
+function addEmployee() {
+  // Similar to addDepartment and addRole, prompt user for employee details and insert into the employees table
+}
+
+function updateEmployeeRole() {
+  // Prompt user to select an employee to update and a new role, then update the role_id in the employees table
+}
+
+// Call the startApp function to begin the application
+startApp();
